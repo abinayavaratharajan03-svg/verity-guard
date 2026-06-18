@@ -11,6 +11,8 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { SiteHeader } from "../components/layout/SiteHeader";
+import { SiteFooter } from "../components/layout/SiteFooter";
 
 function NotFoundComponent() {
   return (
@@ -116,8 +118,14 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <div className="relative min-h-screen flex flex-col">
+        <div aria-hidden className="pointer-events-none fixed inset-0 grid-bg opacity-40 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
+        <SiteHeader />
+        <main className="relative flex-1">
+          <Outlet />
+        </main>
+        <SiteFooter />
+      </div>
     </QueryClientProvider>
   );
 }
