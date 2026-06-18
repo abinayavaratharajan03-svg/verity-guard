@@ -59,9 +59,9 @@ function AnalyzePage() {
           <p className="mt-1 text-sm text-muted-foreground">Frame-by-frame inspection with manipulated-region heatmap.</p>
         </div>
         <div className="flex gap-2">
-          <label>
+          <label className="inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium neon-border text-cyan-neon hover:bg-cyan-neon/10 cursor-pointer transition">
+            <Upload className="h-4 w-4" />Upload
             <input type="file" accept="video/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) run(f); }} />
-            <span><NeonButton variant="outline" as="span" {...({} as object)}><Upload className="h-4 w-4" />Upload</NeonButton></span>
           </label>
           <NeonButton onClick={loadDemo}><Film className="h-4 w-4" />Run Demo</NeonButton>
         </div>
