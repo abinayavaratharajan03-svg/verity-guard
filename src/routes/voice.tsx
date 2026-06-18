@@ -61,9 +61,9 @@ function VoicePage() {
         <GlassCard className="p-5 lg:col-span-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 font-display font-semibold"><AudioLines className="h-4 w-4 text-cyan-neon" />Audio Sample</div>
-            <label>
+            <label className="inline-flex items-center justify-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium neon-border text-cyan-neon hover:bg-cyan-neon/10 cursor-pointer transition">
+              <Upload className="h-3.5 w-3.5" />Upload
               <input type="file" accept="audio/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) load(f); }} />
-              <span><NeonButton variant="outline" className="px-3 py-1.5 text-xs"><Upload className="h-3.5 w-3.5" />Upload</NeonButton></span>
             </label>
           </div>
 
