@@ -130,10 +130,11 @@ function PrivacyPage() {
         <p className="text-xs text-muted-foreground font-mono uppercase tracking-widest">
           Last updated · June 2026
         </p>
-        <Link to="/about">
-          <NeonButton className="inline-flex items-center gap-2">
-            Learn more about the project <ArrowRight className="h-4 w-4" />
-          </NeonButton>
+        <Link
+          to="/about"
+          className="inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium transition-all bg-cyan-neon text-primary-foreground hover:shadow-[0_0_30px_oklch(0.87_0.16_200/0.55)] hover:-translate-y-0.5"
+        >
+          Learn more about the project <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
     </section>
