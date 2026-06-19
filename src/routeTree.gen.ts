@@ -9,16 +9,29 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WorkflowRouteImport } from './routes/workflow'
 import { Route as VoiceRouteImport } from './routes/voice'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as KycRouteImport } from './routes/kyc'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as CapabilitiesRouteImport } from './routes/capabilities'
 import { Route as AnalyzeRouteImport } from './routes/analyze'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
+const WorkflowRoute = WorkflowRouteImport.update({
+  id: '/workflow',
+  path: '/workflow',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VoiceRoute = VoiceRouteImport.update({
   id: '/voice',
   path: '/voice',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KycRoute = KycRouteImport.update({
@@ -29,6 +42,11 @@ const KycRoute = KycRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CapabilitiesRoute = CapabilitiesRouteImport.update({
+  id: '/capabilities',
+  path: '/capabilities',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AnalyzeRoute = AnalyzeRouteImport.update({
@@ -51,58 +69,105 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/analyze': typeof AnalyzeRoute
+  '/capabilities': typeof CapabilitiesRoute
   '/dashboard': typeof DashboardRoute
   '/kyc': typeof KycRoute
+  '/privacy': typeof PrivacyRoute
   '/voice': typeof VoiceRoute
+  '/workflow': typeof WorkflowRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/analyze': typeof AnalyzeRoute
+  '/capabilities': typeof CapabilitiesRoute
   '/dashboard': typeof DashboardRoute
   '/kyc': typeof KycRoute
+  '/privacy': typeof PrivacyRoute
   '/voice': typeof VoiceRoute
+  '/workflow': typeof WorkflowRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/analyze': typeof AnalyzeRoute
+  '/capabilities': typeof CapabilitiesRoute
   '/dashboard': typeof DashboardRoute
   '/kyc': typeof KycRoute
+  '/privacy': typeof PrivacyRoute
   '/voice': typeof VoiceRoute
+  '/workflow': typeof WorkflowRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/analyze' | '/dashboard' | '/kyc' | '/voice'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/analyze'
+    | '/capabilities'
+    | '/dashboard'
+    | '/kyc'
+    | '/privacy'
+    | '/voice'
+    | '/workflow'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/analyze' | '/dashboard' | '/kyc' | '/voice'
+  to:
+    | '/'
+    | '/about'
+    | '/analyze'
+    | '/capabilities'
+    | '/dashboard'
+    | '/kyc'
+    | '/privacy'
+    | '/voice'
+    | '/workflow'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/analyze'
+    | '/capabilities'
     | '/dashboard'
     | '/kyc'
+    | '/privacy'
     | '/voice'
+    | '/workflow'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AnalyzeRoute: typeof AnalyzeRoute
+  CapabilitiesRoute: typeof CapabilitiesRoute
   DashboardRoute: typeof DashboardRoute
   KycRoute: typeof KycRoute
+  PrivacyRoute: typeof PrivacyRoute
   VoiceRoute: typeof VoiceRoute
+  WorkflowRoute: typeof WorkflowRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/workflow': {
+      id: '/workflow'
+      path: '/workflow'
+      fullPath: '/workflow'
+      preLoaderRoute: typeof WorkflowRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/voice': {
       id: '/voice'
       path: '/voice'
       fullPath: '/voice'
       preLoaderRoute: typeof VoiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kyc': {
@@ -117,6 +182,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/capabilities': {
+      id: '/capabilities'
+      path: '/capabilities'
+      fullPath: '/capabilities'
+      preLoaderRoute: typeof CapabilitiesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/analyze': {
@@ -147,9 +219,12 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AnalyzeRoute: AnalyzeRoute,
+  CapabilitiesRoute: CapabilitiesRoute,
   DashboardRoute: DashboardRoute,
   KycRoute: KycRoute,
+  PrivacyRoute: PrivacyRoute,
   VoiceRoute: VoiceRoute,
+  WorkflowRoute: WorkflowRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
