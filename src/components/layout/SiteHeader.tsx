@@ -5,10 +5,10 @@ import { useState } from "react";
 const nav = [
   { to: "/", label: "Home" },
   { to: "/dashboard", label: "Dashboard" },
-  { to: "/analyze", label: "Analyze" },
-  { to: "/kyc", label: "KYC" },
-  { to: "/voice", label: "Voice" },
+  { to: "/capabilities", label: "Capabilities" },
+  { to: "/workflow", label: "System Workflow" },
   { to: "/about", label: "About" },
+  { to: "/privacy", label: "Privacy Policy" },
 ] as const;
 
 export function SiteHeader() {
