@@ -11,17 +11,17 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WorkflowRouteImport } from './routes/workflow'
 import { Route as VoiceRouteImport } from './routes/voice'
+import { Route as RiskReportRouteImport } from './routes/risk-report'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as KycRouteImport } from './routes/kyc'
+import { Route as FrameExtractionRouteImport } from './routes/frame-extraction'
+import { Route as FaceDetectionRouteImport } from './routes/face-detection'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CapabilitiesRouteImport } from './routes/capabilities'
 import { Route as AnalyzeRouteImport } from './routes/analyze'
+import { Route as AiAnalysisRouteImport } from './routes/ai-analysis'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as FrameExtractionRouteImport } from './routes/frame-extraction'
-import { Route as FaceDetectionRouteImport } from './routes/face-detection'
-import { Route as AiAnalysisRouteImport } from './routes/ai-analysis'
-import { Route as RiskReportRouteImport } from './routes/risk-report'
 
 const WorkflowRoute = WorkflowRouteImport.update({
   id: '/workflow',
@@ -33,6 +33,11 @@ const VoiceRoute = VoiceRouteImport.update({
   path: '/voice',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RiskReportRoute = RiskReportRouteImport.update({
+  id: '/risk-report',
+  path: '/risk-report',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
@@ -41,6 +46,16 @@ const PrivacyRoute = PrivacyRouteImport.update({
 const KycRoute = KycRouteImport.update({
   id: '/kyc',
   path: '/kyc',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FrameExtractionRoute = FrameExtractionRouteImport.update({
+  id: '/frame-extraction',
+  path: '/frame-extraction',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaceDetectionRoute = FaceDetectionRouteImport.update({
+  id: '/face-detection',
+  path: '/face-detection',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -58,6 +73,11 @@ const AnalyzeRoute = AnalyzeRouteImport.update({
   path: '/analyze',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AiAnalysisRoute = AiAnalysisRouteImport.update({
+  id: '/ai-analysis',
+  path: '/ai-analysis',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -68,135 +88,115 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FrameExtractionRoute = FrameExtractionRouteImport.update({
-  id: '/frame-extraction',
-  path: '/frame-extraction',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FaceDetectionRoute = FaceDetectionRouteImport.update({
-  id: '/face-detection',
-  path: '/face-detection',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AiAnalysisRoute = AiAnalysisRouteImport.update({
-  id: '/ai-analysis',
-  path: '/ai-analysis',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RiskReportRoute = RiskReportRouteImport.update({
-  id: '/risk-report',
-  path: '/risk-report',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/ai-analysis': typeof AiAnalysisRoute
   '/analyze': typeof AnalyzeRoute
   '/capabilities': typeof CapabilitiesRoute
   '/dashboard': typeof DashboardRoute
+  '/face-detection': typeof FaceDetectionRoute
+  '/frame-extraction': typeof FrameExtractionRoute
   '/kyc': typeof KycRoute
   '/privacy': typeof PrivacyRoute
+  '/risk-report': typeof RiskReportRoute
   '/voice': typeof VoiceRoute
   '/workflow': typeof WorkflowRoute
-  '/frame-extraction': typeof FrameExtractionRoute
-  '/face-detection': typeof FaceDetectionRoute
-  '/ai-analysis': typeof AiAnalysisRoute
-  '/risk-report': typeof RiskReportRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/ai-analysis': typeof AiAnalysisRoute
   '/analyze': typeof AnalyzeRoute
   '/capabilities': typeof CapabilitiesRoute
   '/dashboard': typeof DashboardRoute
+  '/face-detection': typeof FaceDetectionRoute
+  '/frame-extraction': typeof FrameExtractionRoute
   '/kyc': typeof KycRoute
   '/privacy': typeof PrivacyRoute
+  '/risk-report': typeof RiskReportRoute
   '/voice': typeof VoiceRoute
   '/workflow': typeof WorkflowRoute
-  '/frame-extraction': typeof FrameExtractionRoute
-  '/face-detection': typeof FaceDetectionRoute
-  '/ai-analysis': typeof AiAnalysisRoute
-  '/risk-report': typeof RiskReportRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/ai-analysis': typeof AiAnalysisRoute
   '/analyze': typeof AnalyzeRoute
   '/capabilities': typeof CapabilitiesRoute
   '/dashboard': typeof DashboardRoute
+  '/face-detection': typeof FaceDetectionRoute
+  '/frame-extraction': typeof FrameExtractionRoute
   '/kyc': typeof KycRoute
   '/privacy': typeof PrivacyRoute
+  '/risk-report': typeof RiskReportRoute
   '/voice': typeof VoiceRoute
   '/workflow': typeof WorkflowRoute
-  '/frame-extraction': typeof FrameExtractionRoute
-  '/face-detection': typeof FaceDetectionRoute
-  '/ai-analysis': typeof AiAnalysisRoute
-  '/risk-report': typeof RiskReportRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
+    | '/ai-analysis'
     | '/analyze'
     | '/capabilities'
     | '/dashboard'
+    | '/face-detection'
+    | '/frame-extraction'
     | '/kyc'
     | '/privacy'
+    | '/risk-report'
     | '/voice'
     | '/workflow'
-    | '/frame-extraction'
-    | '/face-detection'
-    | '/ai-analysis'
-    | '/risk-report'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/ai-analysis'
     | '/analyze'
     | '/capabilities'
     | '/dashboard'
+    | '/face-detection'
+    | '/frame-extraction'
     | '/kyc'
     | '/privacy'
+    | '/risk-report'
     | '/voice'
     | '/workflow'
-    | '/frame-extraction'
-    | '/face-detection'
-    | '/ai-analysis'
-    | '/risk-report'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/ai-analysis'
     | '/analyze'
     | '/capabilities'
     | '/dashboard'
+    | '/face-detection'
+    | '/frame-extraction'
     | '/kyc'
     | '/privacy'
+    | '/risk-report'
     | '/voice'
     | '/workflow'
-    | '/frame-extraction'
-    | '/face-detection'
-    | '/ai-analysis'
-    | '/risk-report'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AiAnalysisRoute: typeof AiAnalysisRoute
   AnalyzeRoute: typeof AnalyzeRoute
   CapabilitiesRoute: typeof CapabilitiesRoute
   DashboardRoute: typeof DashboardRoute
+  FaceDetectionRoute: typeof FaceDetectionRoute
+  FrameExtractionRoute: typeof FrameExtractionRoute
   KycRoute: typeof KycRoute
   PrivacyRoute: typeof PrivacyRoute
+  RiskReportRoute: typeof RiskReportRoute
   VoiceRoute: typeof VoiceRoute
   WorkflowRoute: typeof WorkflowRoute
-  FrameExtractionRoute: typeof FrameExtractionRoute
-  FaceDetectionRoute: typeof FaceDetectionRoute
-  AiAnalysisRoute: typeof AiAnalysisRoute
-  RiskReportRoute: typeof RiskReportRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -215,6 +215,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VoiceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/risk-report': {
+      id: '/risk-report'
+      path: '/risk-report'
+      fullPath: '/risk-report'
+      preLoaderRoute: typeof RiskReportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/privacy': {
       id: '/privacy'
       path: '/privacy'
@@ -227,6 +234,20 @@ declare module '@tanstack/react-router' {
       path: '/kyc'
       fullPath: '/kyc'
       preLoaderRoute: typeof KycRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/frame-extraction': {
+      id: '/frame-extraction'
+      path: '/frame-extraction'
+      fullPath: '/frame-extraction'
+      preLoaderRoute: typeof FrameExtractionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/face-detection': {
+      id: '/face-detection'
+      path: '/face-detection'
+      fullPath: '/face-detection'
+      preLoaderRoute: typeof FaceDetectionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -250,6 +271,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AnalyzeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ai-analysis': {
+      id: '/ai-analysis'
+      path: '/ai-analysis'
+      fullPath: '/ai-analysis'
+      preLoaderRoute: typeof AiAnalysisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -264,51 +292,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/frame-extraction': {
-      id: '/frame-extraction'
-      path: '/frame-extraction'
-      fullPath: '/frame-extraction'
-      preLoaderRoute: typeof FrameExtractionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/face-detection': {
-      id: '/face-detection'
-      path: '/face-detection'
-      fullPath: '/face-detection'
-      preLoaderRoute: typeof FaceDetectionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ai-analysis': {
-      id: '/ai-analysis'
-      path: '/ai-analysis'
-      fullPath: '/ai-analysis'
-      preLoaderRoute: typeof AiAnalysisRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/risk-report': {
-      id: '/risk-report'
-      path: '/risk-report'
-      fullPath: '/risk-report'
-      preLoaderRoute: typeof RiskReportRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AiAnalysisRoute: AiAnalysisRoute,
   AnalyzeRoute: AnalyzeRoute,
   CapabilitiesRoute: CapabilitiesRoute,
   DashboardRoute: DashboardRoute,
+  FaceDetectionRoute: FaceDetectionRoute,
+  FrameExtractionRoute: FrameExtractionRoute,
   KycRoute: KycRoute,
   PrivacyRoute: PrivacyRoute,
+  RiskReportRoute: RiskReportRoute,
   VoiceRoute: VoiceRoute,
   WorkflowRoute: WorkflowRoute,
-  FrameExtractionRoute: FrameExtractionRoute,
-  FaceDetectionRoute: FaceDetectionRoute,
-  AiAnalysisRoute: AiAnalysisRoute,
-  RiskReportRoute: RiskReportRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
