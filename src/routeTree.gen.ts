@@ -13,6 +13,7 @@ import { Route as WorkflowRouteImport } from './routes/workflow'
 import { Route as VoiceRouteImport } from './routes/voice'
 import { Route as RiskReportRouteImport } from './routes/risk-report'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as LiveWebcamRouteImport } from './routes/live-webcam'
 import { Route as KycRouteImport } from './routes/kyc'
 import { Route as FrameExtractionRouteImport } from './routes/frame-extraction'
 import { Route as FaceDetectionRouteImport } from './routes/face-detection'
@@ -41,6 +42,11 @@ const RiskReportRoute = RiskReportRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LiveWebcamRoute = LiveWebcamRouteImport.update({
+  id: '/live-webcam',
+  path: '/live-webcam',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KycRoute = KycRouteImport.update({
@@ -99,6 +105,7 @@ export interface FileRoutesByFullPath {
   '/face-detection': typeof FaceDetectionRoute
   '/frame-extraction': typeof FrameExtractionRoute
   '/kyc': typeof KycRoute
+  '/live-webcam': typeof LiveWebcamRoute
   '/privacy': typeof PrivacyRoute
   '/risk-report': typeof RiskReportRoute
   '/voice': typeof VoiceRoute
@@ -114,6 +121,7 @@ export interface FileRoutesByTo {
   '/face-detection': typeof FaceDetectionRoute
   '/frame-extraction': typeof FrameExtractionRoute
   '/kyc': typeof KycRoute
+  '/live-webcam': typeof LiveWebcamRoute
   '/privacy': typeof PrivacyRoute
   '/risk-report': typeof RiskReportRoute
   '/voice': typeof VoiceRoute
@@ -130,6 +138,7 @@ export interface FileRoutesById {
   '/face-detection': typeof FaceDetectionRoute
   '/frame-extraction': typeof FrameExtractionRoute
   '/kyc': typeof KycRoute
+  '/live-webcam': typeof LiveWebcamRoute
   '/privacy': typeof PrivacyRoute
   '/risk-report': typeof RiskReportRoute
   '/voice': typeof VoiceRoute
@@ -147,6 +156,7 @@ export interface FileRouteTypes {
     | '/face-detection'
     | '/frame-extraction'
     | '/kyc'
+    | '/live-webcam'
     | '/privacy'
     | '/risk-report'
     | '/voice'
@@ -162,6 +172,7 @@ export interface FileRouteTypes {
     | '/face-detection'
     | '/frame-extraction'
     | '/kyc'
+    | '/live-webcam'
     | '/privacy'
     | '/risk-report'
     | '/voice'
@@ -177,6 +188,7 @@ export interface FileRouteTypes {
     | '/face-detection'
     | '/frame-extraction'
     | '/kyc'
+    | '/live-webcam'
     | '/privacy'
     | '/risk-report'
     | '/voice'
@@ -193,6 +205,7 @@ export interface RootRouteChildren {
   FaceDetectionRoute: typeof FaceDetectionRoute
   FrameExtractionRoute: typeof FrameExtractionRoute
   KycRoute: typeof KycRoute
+  LiveWebcamRoute: typeof LiveWebcamRoute
   PrivacyRoute: typeof PrivacyRoute
   RiskReportRoute: typeof RiskReportRoute
   VoiceRoute: typeof VoiceRoute
@@ -227,6 +240,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/live-webcam': {
+      id: '/live-webcam'
+      path: '/live-webcam'
+      fullPath: '/live-webcam'
+      preLoaderRoute: typeof LiveWebcamRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kyc': {
@@ -305,6 +325,7 @@ const rootRouteChildren: RootRouteChildren = {
   FaceDetectionRoute: FaceDetectionRoute,
   FrameExtractionRoute: FrameExtractionRoute,
   KycRoute: KycRoute,
+  LiveWebcamRoute: LiveWebcamRoute,
   PrivacyRoute: PrivacyRoute,
   RiskReportRoute: RiskReportRoute,
   VoiceRoute: VoiceRoute,
