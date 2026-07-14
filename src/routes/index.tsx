@@ -11,8 +11,8 @@ export const Route = createFileRoute("/")({
     meta: [
       { title: "Deepfake Auditor — Real-Time Video Deception & Deepfake Detection" },
       { name: "description", content: "AI-Powered Deepfake Detection & Identity Verification Platform. Detect synthetic media, voice cloning, and KYC fraud in real time." },
-      { property: "og:title", content: "Deepfake Auditor" },
-      { property: "og:description", content: "AI-Powered Deepfake Detection & Identity Verification Platform." },
+      { property: "og:title", content: "Deepfake Auditor — Real-Time Video Deception & Deepfake Detection" },
+      { property: "og:description", content: "AI-Powered Deepfake Detection & Identity Verification Platform. Detect synthetic media, voice cloning, and KYC fraud in real time." },
     ],
   }),
   component: Landing,
