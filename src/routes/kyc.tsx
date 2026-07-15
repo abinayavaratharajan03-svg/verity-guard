@@ -2,6 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { GlassCard, NeonButton, RiskBadge, ScoreRing, StatTile } from "@/components/ui/primitives";
 import { Camera, IdCard, ShieldCheck, Upload } from "lucide-react";
 import { useRef, useState } from "react";
+import { verifyKyc, toBackendError } from "@/lib/api";
+import { useDetection, scoreToRisk } from "@/context/detection-context";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/kyc")({
   head: () => ({ meta: [{ title: "KYC Verification — Deepfake Auditor" }, { name: "description", content: "Match identity documents to a live face capture with synthetic-face and fraud-risk scoring." }] }),
