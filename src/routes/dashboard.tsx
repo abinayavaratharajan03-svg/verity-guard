@@ -32,14 +32,29 @@ const riskMix = [
 function Dashboard() {
   const [result, setResult] = useState<DetectionResult | null>(null);
   const [busy, setBusy] = useState(false);
+  const [backendNote, setBackendNote] = useState<string | null>(null);
   const [webcamOn, setWebcamOn] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const { alerts, pushAlert, totalScanned, incScanned } = useDetection();
 
   async function onFile(file: File) {
     setBusy(true);
-    await new Promise((r) => setTimeout(r, 1400));
-    setResult(analyzeFile(file.name, file.size));
-    setBusy(false);
+    setBackendNote(null);
+    try {
+      const r = await analyzeVideo(file);
+      const local = analyzeFile(file.name, file.size);
+      setResult({ ...local, authenticityScore: r.authenticity_score, deepfakeProbability: r.deepfake_probability, confidence: r.confidence, verdict: r.verdict });
+      pushAlert({ source: file.name, message: `Video verdict: ${r.verdict.toUpperCase()} (${r.authenticity_score}%)`, risk: scoreToRisk(r.authenticity_score) });
+    } catch (err) {
+      const be = toBackendError(err);
+      setBackendNote(be.message);
+      const local = analyzeFile(file.name, file.size);
+      setResult(local);
+      pushAlert({ source: file.name, message: `Offline analysis: ${local.verdict.toUpperCase()} (${local.authenticityScore}%)`, risk: scoreToRisk(local.authenticityScore) });
+    } finally {
+      incScanned();
+      setBusy(false);
+    }
   }
 
   async function toggleWebcam() {
