@@ -125,6 +125,16 @@ function KycPage() {
         </GlassCard>
       </div>
 
+      <div className="mt-4 flex flex-wrap items-center gap-3">
+        <NeonButton onClick={runVerify} disabled={!idFile || !captureBlob || busy}>
+          {busy ? "Verifying…" : "Run Verification"}
+        </NeonButton>
+        {capture && <NeonButton variant="outline" className="px-3 py-1.5 text-xs" onClick={() => { setCapture(null); setCaptureBlob(null); }}>Retake</NeonButton>}
+        <span className="font-mono text-[11px] text-muted-foreground">2. Live selfie · 3. Verification</span>
+      </div>
+      {note && <div className="mt-3 rounded-md border border-[oklch(0.78_0.27_350/0.35)] bg-[oklch(0.78_0.27_350/0.08)] px-3 py-2 text-xs font-mono text-[oklch(0.78_0.27_350)]">{note} · showing offline analysis</div>}
+
+
       <div className="mt-4 grid gap-4 lg:grid-cols-3">
         <GlassCard className="p-5">
           <div className="font-display font-semibold">Face Matching Score</div>
