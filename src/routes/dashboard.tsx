@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { GlassCard, NeonButton, RiskBadge, ScoreRing, SectionHeading, StatTile } from "@/components/ui/primitives";
+import { GlassCard, NeonButton, RiskBadge, ScoreRing, StatTile } from "@/components/ui/primitives";
 import { Upload, Webcam, CircleAlert, Mic, Activity } from "lucide-react";
 import { useRef, useState } from "react";
 import { analyzeFile, type DetectionResult } from "@/lib/mock-detection";
+import { analyzeVideo, toBackendError } from "@/lib/api";
+import { useDetection, scoreToRisk } from "@/context/detection-context";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 export const Route = createFileRoute("/dashboard")({
