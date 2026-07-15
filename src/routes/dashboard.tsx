@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { GlassCard, NeonButton, RiskBadge, ScoreRing, SectionHeading, StatTile } from "@/components/ui/primitives";
+import { GlassCard, NeonButton, RiskBadge, ScoreRing, StatTile } from "@/components/ui/primitives";
 import { Upload, Webcam, CircleAlert, Mic, Activity } from "lucide-react";
 import { useRef, useState } from "react";
 import { analyzeFile, type DetectionResult } from "@/lib/mock-detection";
+import { analyzeVideo, toBackendError } from "@/lib/api";
+import { useDetection, scoreToRisk } from "@/context/detection-context";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 export const Route = createFileRoute("/dashboard")({
@@ -30,14 +32,29 @@ const riskMix = [
 function Dashboard() {
   const [result, setResult] = useState<DetectionResult | null>(null);
   const [busy, setBusy] = useState(false);
+  const [backendNote, setBackendNote] = useState<string | null>(null);
   const [webcamOn, setWebcamOn] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const { alerts, pushAlert, totalScanned, incScanned } = useDetection();
 
   async function onFile(file: File) {
     setBusy(true);
-    await new Promise((r) => setTimeout(r, 1400));
-    setResult(analyzeFile(file.name, file.size));
-    setBusy(false);
+    setBackendNote(null);
+    try {
+      const r = await analyzeVideo(file);
+      const local = analyzeFile(file.name, file.size);
+      setResult({ ...local, authenticityScore: r.authenticity_score, deepfakeProbability: r.deepfake_probability, confidence: r.confidence, verdict: r.verdict });
+      pushAlert({ source: file.name, message: `Video verdict: ${r.verdict.toUpperCase()} (${r.authenticity_score}%)`, risk: scoreToRisk(r.authenticity_score) });
+    } catch (err) {
+      const be = toBackendError(err);
+      setBackendNote(be.message);
+      const local = analyzeFile(file.name, file.size);
+      setResult(local);
+      pushAlert({ source: file.name, message: `Offline analysis: ${local.verdict.toUpperCase()} (${local.authenticityScore}%)`, risk: scoreToRisk(local.authenticityScore) });
+    } finally {
+      incScanned();
+      setBusy(false);
+    }
   }
 
   async function toggleWebcam() {
@@ -76,11 +93,16 @@ function Dashboard() {
       </div>
 
       <div className="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <StatTile label="Audited Today" value="1,284" hint="+12% vs avg" accent="cyan" />
-        <StatTile label="Deepfakes Blocked" value="47" hint="3 critical" accent="magenta" />
-        <StatTile label="KYC Verified" value="918" hint="99.1% pass" accent="lime" />
+        <StatTile label="Total Scanned" value={totalScanned.toLocaleString()} hint="session total" accent="cyan" />
+        <StatTile label="Deepfakes Blocked" value={alerts.filter((a) => a.risk === "critical" || a.risk === "high").length} hint="risk ≥ high" accent="magenta" />
+        <StatTile label="Alerts" value={alerts.length} hint="live feed" accent="lime" />
         <StatTile label="Median Latency" value="412ms" hint="p95 740ms" accent="blue" />
       </div>
+      {backendNote && (
+        <div className="mt-3 glass rounded-lg px-3 py-2 text-xs font-mono text-[oklch(0.78_0.27_350)] border border-[oklch(0.78_0.27_350/0.35)]">
+          {backendNote} · showing offline analysis
+        </div>
+      )}
 
       <div className="mt-6 grid gap-4 lg:grid-cols-3">
         {/* Upload */}
@@ -234,20 +256,29 @@ function Dashboard() {
         </GlassCard>
 
         <GlassCard className="p-5">
-          <div className="font-display font-semibold flex items-center gap-2"><CircleAlert className="h-4 w-4 text-[oklch(0.78_0.27_350)]" />Suspicious Activity</div>
-          <ul className="mt-3 space-y-2">
-            {[
-              { sev: "critical", t: "Deepfake face-swap detected", at: "AUD-9127 · 12:39" },
-              { sev: "high", t: "Voice clone signature (3 markers)", at: "AUD-9118 · 12:11" },
-              { sev: "medium", t: "Liveness drift > threshold", at: "AUD-9112 · 11:58" },
-              { sev: "low", t: "Compression artifact spike", at: "AUD-9099 · 11:32" },
-            ].map((a, i) => (
-              <li key={i} className="glass rounded-lg p-3">
-                <div className="flex items-center justify-between gap-2"><span className="text-sm">{a.t}</span><RiskBadge level={a.sev as "critical" | "high" | "medium" | "low"} /></div>
-                <div className="mt-1 font-mono text-[10px] text-muted-foreground">{a.at}</div>
-              </li>
-            ))}
-          </ul>
+          <div className="font-display font-semibold flex items-center gap-2"><CircleAlert className="h-4 w-4 text-[oklch(0.78_0.27_350)]" />Live Alert Feed</div>
+          {alerts.length === 0 ? (
+            <div className="mt-6 rounded-lg border border-dashed border-white/10 p-6 text-center text-xs text-muted-foreground font-mono">
+              No alerts yet — run a video analysis, voice check, or KYC to populate the feed.
+            </div>
+          ) : (
+            <ul className="mt-3 space-y-2 max-h-[360px] overflow-y-auto pr-1">
+              {alerts.map((a) => (
+                <li key={a.id} className="glass rounded-lg p-3 border-l-2" style={{
+                  borderLeftColor: a.risk === "critical" ? "oklch(0.78 0.27 350)" : a.risk === "high" ? "oklch(0.82 0.2 50)" : a.risk === "medium" ? "oklch(0.87 0.16 200)" : "oklch(0.88 0.22 130)",
+                }}>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-sm truncate">{a.message}</span>
+                    <RiskBadge level={a.risk} />
+                  </div>
+                  <div className="mt-1 flex justify-between font-mono text-[10px] text-muted-foreground">
+                    <span className="truncate">{a.source}</span>
+                    <span>{a.time}</span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
         </GlassCard>
       </div>
     </div>

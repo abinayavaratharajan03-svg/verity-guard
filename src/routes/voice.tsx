@@ -3,6 +3,8 @@ import { GlassCard, NeonButton, RiskBadge, ScoreRing } from "@/components/ui/pri
 import { AudioLines, Upload } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { analyzeFile } from "@/lib/mock-detection";
+import { analyzeAudio, toBackendError } from "@/lib/api";
+import { useDetection, scoreToRisk } from "@/context/detection-context";
 
 export const Route = createFileRoute("/voice")({
   head: () => ({ meta: [{ title: "Voice Clone Detection — Deepfake Auditor" }, { name: "description", content: "Detect AI-generated voice clones via spectral fingerprinting and waveform analysis." }] }),
@@ -13,17 +15,35 @@ function VoicePage() {
   const [file, setFile] = useState<File | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [score, setScore] = useState<number | null>(null);
+  const [note, setNote] = useState<string | null>(null);
   const [bars, setBars] = useState<number[]>(Array.from({ length: 64 }, () => 8));
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const rafRef = useRef<number | null>(null);
   const ctxRef = useRef<AudioContext | null>(null);
+  const { pushAlert, setLatestVoice } = useDetection();
 
   useEffect(() => () => { if (audioUrl) URL.revokeObjectURL(audioUrl); cancelAnimationFrame(rafRef.current ?? 0); ctxRef.current?.close(); }, [audioUrl]);
 
   async function load(f: File) {
     setFile(f);
     setAudioUrl(URL.createObjectURL(f));
-    setScore(analyzeFile(f.name, f.size).voiceScore);
+    setNote(null);
+    let s: number;
+    let verdict: string;
+    try {
+      const r = await analyzeAudio(f);
+      s = r.voice_score ?? r.authenticity_score;
+      verdict = r.verdict;
+    } catch (err) {
+      setNote(toBackendError(err).message);
+      const local = analyzeFile(f.name, f.size);
+      s = local.voiceScore;
+      verdict = s >= 75 ? "authentic" : s >= 50 ? "suspicious" : "deepfake";
+    }
+    setScore(s);
+    const risk = scoreToRisk(s);
+    setLatestVoice({ score: s, verdict, risk });
+    pushAlert({ source: f.name, message: `Voice ${verdict.toUpperCase()} · score ${s}%`, risk });
   }
 
   async function play() {
@@ -86,6 +106,7 @@ function VoicePage() {
           ) : (
             <div className="mt-4 text-sm text-muted-foreground">Upload an audio file to analyze.</div>
           )}
+          {note && <div className="mt-3 rounded-md border border-[oklch(0.78_0.27_350/0.35)] bg-[oklch(0.78_0.27_350/0.08)] px-3 py-2 text-xs font-mono text-[oklch(0.78_0.27_350)]">{note} · showing offline analysis</div>}
         </GlassCard>
 
         <GlassCard className="p-5">
