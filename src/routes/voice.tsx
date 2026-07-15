@@ -3,6 +3,8 @@ import { GlassCard, NeonButton, RiskBadge, ScoreRing } from "@/components/ui/pri
 import { AudioLines, Upload } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { analyzeFile } from "@/lib/mock-detection";
+import { analyzeAudio, toBackendError } from "@/lib/api";
+import { useDetection, scoreToRisk } from "@/context/detection-context";
 
 export const Route = createFileRoute("/voice")({
   head: () => ({ meta: [{ title: "Voice Clone Detection — Deepfake Auditor" }, { name: "description", content: "Detect AI-generated voice clones via spectral fingerprinting and waveform analysis." }] }),
