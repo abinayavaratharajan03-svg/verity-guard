@@ -106,6 +106,7 @@ function VoicePage() {
           ) : (
             <div className="mt-4 text-sm text-muted-foreground">Upload an audio file to analyze.</div>
           )}
+          {note && <div className="mt-3 rounded-md border border-[oklch(0.78_0.27_350/0.35)] bg-[oklch(0.78_0.27_350/0.08)] px-3 py-2 text-xs font-mono text-[oklch(0.78_0.27_350)]">{note} · showing offline analysis</div>}
         </GlassCard>
 
         <GlassCard className="p-5">
