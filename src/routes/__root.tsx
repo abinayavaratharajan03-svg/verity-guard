@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteHeader } from "../components/layout/SiteHeader";
 import { SiteFooter } from "../components/layout/SiteFooter";
+import { DetectionProvider } from "../context/detection-context";
 
 function NotFoundComponent() {
   return (
@@ -122,14 +123,16 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="relative min-h-screen flex flex-col">
-        <div aria-hidden className="pointer-events-none fixed inset-0 grid-bg opacity-40 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
-        <SiteHeader />
-        <main className="relative flex-1">
-          <Outlet />
-        </main>
-        <SiteFooter />
-      </div>
+      <DetectionProvider>
+        <div className="relative min-h-screen flex flex-col">
+          <div aria-hidden className="pointer-events-none fixed inset-0 grid-bg opacity-40 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
+          <SiteHeader />
+          <main className="relative flex-1">
+            <Outlet />
+          </main>
+          <SiteFooter />
+        </div>
+      </DetectionProvider>
     </QueryClientProvider>
   );
 }
