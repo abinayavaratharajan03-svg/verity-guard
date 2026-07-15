@@ -256,20 +256,29 @@ function Dashboard() {
         </GlassCard>
 
         <GlassCard className="p-5">
-          <div className="font-display font-semibold flex items-center gap-2"><CircleAlert className="h-4 w-4 text-[oklch(0.78_0.27_350)]" />Suspicious Activity</div>
-          <ul className="mt-3 space-y-2">
-            {[
-              { sev: "critical", t: "Deepfake face-swap detected", at: "AUD-9127 · 12:39" },
-              { sev: "high", t: "Voice clone signature (3 markers)", at: "AUD-9118 · 12:11" },
-              { sev: "medium", t: "Liveness drift > threshold", at: "AUD-9112 · 11:58" },
-              { sev: "low", t: "Compression artifact spike", at: "AUD-9099 · 11:32" },
-            ].map((a, i) => (
-              <li key={i} className="glass rounded-lg p-3">
-                <div className="flex items-center justify-between gap-2"><span className="text-sm">{a.t}</span><RiskBadge level={a.sev as "critical" | "high" | "medium" | "low"} /></div>
-                <div className="mt-1 font-mono text-[10px] text-muted-foreground">{a.at}</div>
-              </li>
-            ))}
-          </ul>
+          <div className="font-display font-semibold flex items-center gap-2"><CircleAlert className="h-4 w-4 text-[oklch(0.78_0.27_350)]" />Live Alert Feed</div>
+          {alerts.length === 0 ? (
+            <div className="mt-6 rounded-lg border border-dashed border-white/10 p-6 text-center text-xs text-muted-foreground font-mono">
+              No alerts yet — run a video analysis, voice check, or KYC to populate the feed.
+            </div>
+          ) : (
+            <ul className="mt-3 space-y-2 max-h-[360px] overflow-y-auto pr-1">
+              {alerts.map((a) => (
+                <li key={a.id} className="glass rounded-lg p-3 border-l-2" style={{
+                  borderLeftColor: a.risk === "critical" ? "oklch(0.78 0.27 350)" : a.risk === "high" ? "oklch(0.82 0.2 50)" : a.risk === "medium" ? "oklch(0.87 0.16 200)" : "oklch(0.88 0.22 130)",
+                }}>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-sm truncate">{a.message}</span>
+                    <RiskBadge level={a.risk} />
+                  </div>
+                  <div className="mt-1 flex justify-between font-mono text-[10px] text-muted-foreground">
+                    <span className="truncate">{a.source}</span>
+                    <span>{a.time}</span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
         </GlassCard>
       </div>
     </div>
