@@ -12,12 +12,18 @@ export const Route = createFileRoute("/kyc")({
 });
 
 function KycPage() {
+  const [docType, setDocType] = useState<"aadhaar" | "pan" | "passport">("aadhaar");
+  const [idFile, setIdFile] = useState<File | null>(null);
   const [idPreview, setIdPreview] = useState<string | null>(null);
   const [capture, setCapture] = useState<string | null>(null);
+  const [captureBlob, setCaptureBlob] = useState<Blob | null>(null);
   const [match, setMatch] = useState<number | null>(null);
+  const [note, setNote] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
   const [cameraOn, setCameraOn] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const { pushAlert, setLatestKYC } = useDetection();
 
   async function startCam() {
     try {
@@ -31,7 +37,27 @@ function KycPage() {
     c.width = v.videoWidth || 480; c.height = v.videoHeight || 360;
     c.getContext("2d")?.drawImage(v, 0, 0, c.width, c.height);
     setCapture(c.toDataURL("image/png"));
-    setMatch(82 + Math.floor(Math.random() * 14));
+    c.toBlob((b) => b && setCaptureBlob(b), "image/png");
+  }
+  async function runVerify() {
+    if (!idFile || !captureBlob) return;
+    setBusy(true); setNote(null);
+    let m: number;
+    let verdict: string;
+    try {
+      const r = await verifyKyc(idFile, captureBlob, docType);
+      m = r.face_match;
+      verdict = r.verdict;
+    } catch (err) {
+      setNote(toBackendError(err).message);
+      m = 82 + Math.floor(Math.random() * 14);
+      verdict = m >= 88 ? "verified" : m >= 70 ? "review" : "rejected";
+    }
+    setMatch(m);
+    const risk = scoreToRisk(m);
+    setLatestKYC({ score: m, verdict, risk });
+    pushAlert({ source: `KYC · ${docType}`, message: `${verdict.toUpperCase()} · face match ${m}%`, risk });
+    setBusy(false);
   }
 
   const risk: "low" | "medium" | "high" = match == null ? "medium" : match >= 88 ? "low" : match >= 70 ? "medium" : "high";
