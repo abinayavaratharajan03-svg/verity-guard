@@ -93,11 +93,16 @@ function Dashboard() {
       </div>
 
       <div className="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <StatTile label="Audited Today" value="1,284" hint="+12% vs avg" accent="cyan" />
-        <StatTile label="Deepfakes Blocked" value="47" hint="3 critical" accent="magenta" />
-        <StatTile label="KYC Verified" value="918" hint="99.1% pass" accent="lime" />
+        <StatTile label="Total Scanned" value={totalScanned.toLocaleString()} hint="session total" accent="cyan" />
+        <StatTile label="Deepfakes Blocked" value={alerts.filter((a) => a.risk === "critical" || a.risk === "high").length} hint="risk ≥ high" accent="magenta" />
+        <StatTile label="Alerts" value={alerts.length} hint="live feed" accent="lime" />
         <StatTile label="Median Latency" value="412ms" hint="p95 740ms" accent="blue" />
       </div>
+      {backendNote && (
+        <div className="mt-3 glass rounded-lg px-3 py-2 text-xs font-mono text-[oklch(0.78_0.27_350)] border border-[oklch(0.78_0.27_350/0.35)]">
+          {backendNote} · showing offline analysis
+        </div>
+      )}
 
       <div className="mt-6 grid gap-4 lg:grid-cols-3">
         {/* Upload */}
